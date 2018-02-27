@@ -11,8 +11,8 @@ import (
 	"github.com/jeffersonsc/beta-project/handler"
 	"github.com/jeffersonsc/beta-project/lib/cache"
 	"github.com/jeffersonsc/beta-project/lib/context"
-	"github.com/jeffersonsc/beta-project/lib/template"
 	"github.com/jeffersonsc/beta-project/lib/cors"
+	"github.com/jeffersonsc/beta-project/lib/template"
 	"gopkg.in/macaron.v1"
 )
 
@@ -37,22 +37,22 @@ func SetupMiddlewares(app *macaron.Macaron) {
 		Funcs:     template.FuncMaps(),
 	}))
 	app.Use(macaron.Renderer(macaron.RenderOptions{
-    	Directory: "public/templates",
-    	Funcs:     template.FuncMaps(),
-    }))
+		Directory: "public/templates",
+		Funcs:     template.FuncMaps(),
+	}))
 	//Cache in memory
 	app.Use(mcache.Cacher(
 		cache.Option(conf.Cfg.Section("").Key("cache_adapter").Value()),
 	))
 	/*
-	Redis Cache
-	Add this lib to import session: _ "github.com/go-macaron/cache/redis"
-	Later replaces the cache in memory instructions for the lines below
-	optCache := mcache.Options{
-			Adapter:       conf.Cfg.Section("").Key("cache_adapter").Value(),
-			AdapterConfig: conf.Cfg.Section("").Key("cache_adapter_config").Value(),
-		}
-	app.Use(mcache.Cacher(optCache))
+		Redis Cache
+		Add this lib to import session: _ "github.com/go-macaron/cache/redis"
+		Later replaces the cache in memory instructions for the lines below
+		optCache := mcache.Options{
+				Adapter:       conf.Cfg.Section("").Key("cache_adapter").Value(),
+				AdapterConfig: conf.Cfg.Section("").Key("cache_adapter_config").Value(),
+			}
+		app.Use(mcache.Cacher(optCache))
 	*/
 	app.Use(session.Sessioner())
 	app.Use(context.Contexter())
@@ -64,6 +64,8 @@ func SetupRoutes(app *macaron.Macaron) {
 	app.Get("", func() string {
 		return "Mercurius Works!"
 	})
+
+	app.Get("/test", handler.TestConnMongo)
 	/*
 		//An example to test DB connection
 		app.Get("", func() string {
