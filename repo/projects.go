@@ -19,11 +19,31 @@ func CreateProject(project *model.Project) (err error) {
 	project.CreatedAt = time.Now()
 	project.UpdatedAt = time.Now()
 
+	subtask := model.SubTask{
+		ID:        bson.NewObjectId(),
+		Name:      "Teste de subtask",
+		CreatedAt: time.Now(),
+	}
+
+	task := model.Task{
+		ID:          bson.NewObjectId(),
+		Name:        "Task Default",
+		Description: "Description task",
+		Color:       "#C0C0C0",
+		Cost:        100,
+		CreatedAt:   time.Now(),
+	}
+
 	for _, v := range []string{"Backlog", "Doing", "Done"} {
 		board := model.Board{}
 		board.ID = bson.NewObjectId()
 		board.Name = v
 		board.CreatedAt = time.Now()
+
+		task.SubTasks = append(task.SubTasks, subtask)
+
+		board.Tasks = append(board.Tasks, task)
+
 		project.Boards = append(project.Boards, board)
 	}
 
