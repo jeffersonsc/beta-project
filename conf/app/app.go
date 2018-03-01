@@ -66,6 +66,11 @@ func SetupRoutes(app *macaron.Macaron) {
 	})
 
 	app.Get("/test", handler.TestConnMongo)
+
+	app.Group("/projects", func() {
+		app.Get("/", handler.FindProjectsHandler)
+		app.Post("/", handler.CreateProjectHandler)
+	})
 	/*
 		//An example to test DB connection
 		app.Get("", func() string {
