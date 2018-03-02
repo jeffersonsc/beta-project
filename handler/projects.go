@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/jeffersonsc/beta-project/lib/context"
@@ -33,8 +34,8 @@ func CreateProjectHandler(ctx *context.Context) {
 	ctx.JSON(http.StatusOK, project)
 }
 
-// FindProjectsHandler select all projetcs
-func FindProjectsHandler(ctx *context.Context) {
+// AllProjectsHandler select all projetcs
+func AllProjectsHandler(ctx *context.Context) {
 	projects, err := repo.FindAllProjects()
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, map[string]string{"error": "Error on get projects"})
@@ -45,4 +46,41 @@ func FindProjectsHandler(ctx *context.Context) {
 		return
 	}
 	ctx.JSON(http.StatusOK, map[string]interface{}{"projects": projects})
+}
+
+// FindProjectHandler find by id
+func FindProjectHandler(ctx *context.Context) {
+	log.Println("ID ", ctx.Params("id"))
+	project, err := repo.FindProject(ctx.Params("id"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, map[string]string{"error": "Error on get project. ERROR: " + err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, map[string]interface{}{"project": project})
+}
+
+// UpdateProjectHandler change project
+func UpdateProjectHandler(ctx *context.Context) {
+	body, err := ctx.Req.Body().Bytes()
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, map[string]string{"error": "Error on read body"})
+		return
+	}
+	defer ctx.Req.Body().ReadCloser()
+
+	project := model.Project{}
+	if err := json.Unmarshal(body, &project); err != nil {
+		ctx.JSON(http.StatusBadRequest, map[string]string{"error": "Error parse json"})
+		return
+	}
+
+	id := ctx.Params("id")
+
+	if err := repo.UpdateProject(id, &project); err != nil {
+		ctx.JSON(http.StatusBadRequest, map[string]string{"error": "Error on update project. ERROR: " + err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, map[string]interface{}{"": ""})
 }

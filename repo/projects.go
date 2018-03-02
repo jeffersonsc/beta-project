@@ -61,3 +61,24 @@ func FindAllProjects() (projects []model.Project, err error) {
 	err = col.Find(bson.M{}).All(&projects)
 	return
 }
+
+// FindProject return project by id
+func FindProject(id string) (project model.Project, err error) {
+	col, err := conf.GetMongoCollection("projects")
+	if err != nil {
+		return
+	}
+
+	err = col.Find(bson.M{"_id": bson.ObjectIdHex(id)}).One(&project)
+	return
+}
+
+// UpdateProject change project
+func UpdateProject(id string, project *model.Project) error {
+	col, err := conf.GetMongoCollection("projects")
+	if err != nil {
+		return err
+	}
+
+	return col.Update(bson.M{"_id": bson.ObjectIdHex(id)}, bson.M{"$set": bson.M{"name": project.Name, "description": project.Description, "status": project.Status, "updated_at": time.Now()}})
+}
