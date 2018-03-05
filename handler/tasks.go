@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/jeffersonsc/beta-project/lib/context"
@@ -23,8 +24,10 @@ func CreateTaskHandler(ctx *context.Context) {
 		return
 	}
 
-	projectID := ctx.Params("project_id")
-	boardID := ctx.Query("board_id")
+	projectID := ctx.Params("projectid")
+	boardID := ctx.Query("boardid")
+
+	log.Println(projectID, boardID)
 
 	if err := repo.CreateTask(projectID, boardID, &task); err != nil {
 		ctx.JSON(http.StatusBadRequest, map[string]string{"error": "Error on save task. ERROR: " + err.Error()})
@@ -47,7 +50,7 @@ func UpdateTaskHandler(ctx *context.Context) {
 		return
 	}
 
-	projectID := ctx.Params("project_id")
+	projectID := ctx.Params("projectid")
 	taskID := ctx.Params("id")
 
 	if err := repo.UpdateTask(projectID, taskID, &task); err != nil {

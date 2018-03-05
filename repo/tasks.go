@@ -26,7 +26,7 @@ func CreateTask(projectID string, boardID string, task *model.Task) error {
 	update := bson.M{
 		"$set": bson.M{"updated_at": time.Now()},
 		"$push": bson.M{
-			"board.$.tasks": task,
+			"boards.$.tasks": task,
 		},
 	}
 
@@ -47,10 +47,16 @@ func UpdateTask(projectID string, taskID string, task *model.Task) error {
 
 	update := bson.M{
 		"$set": bson.M{
-			"name":        task.Name,
-			"description": task.Description,
-			"task_type":   task.TaskType,
-			"cost":        task.Cost,
+
+			"board.$.tasks.$.name":             task.Name,
+			"board.$.tasks.$.description":      task.Description,
+			"board.$.tasks.$.task_type":        task.TaskType,
+			"board.$.tasks.$.cost":             task.Cost,
+			"board.$.tasks.$.evaluation":       task.Evaluation,
+			"board.$.tasks.$.status_evaluated": task.StatusEvaluated,
+			"board.$.tasks.$.status_completed": task.StatusComplited,
+			"board.$.tasks.$.color":            task.Color,
+			"board.$.tasks.$.updated_at":       time.Now(),
 		},
 	}
 

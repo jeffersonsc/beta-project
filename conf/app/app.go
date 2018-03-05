@@ -74,9 +74,10 @@ func SetupRoutes(app *macaron.Macaron) {
 		app.Get("/:id", handler.FindProjectHandler)
 		app.Put("/:id", handler.UpdateProjectHandler)
 
-		app.Post("/:project_id/tasks", handler.CreateTaskHandler)
-		app.Put("/:project_id/tasks/:id", handler.UpateTaskHandler)
+		app.Post("/:projectid/tasks", handler.CreateTaskHandler)
+		app.Put("/:projectid/tasks/:id", handler.UpdateTaskHandler)
 	})
+
 	/*
 		//An example to test DB connection
 		app.Get("", func() string {
