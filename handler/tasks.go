@@ -60,3 +60,29 @@ func UpdateTaskHandler(ctx *context.Context) {
 
 	ctx.JSON(http.StatusOK, map[string]interface{}{"": ""})
 }
+
+func MoveTaskhandler(ctx *context.Context) {
+	projectID := ctx.Params("projectid")
+
+	body, err := ctx.Req.Body().Bytes()
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, map[string]string{"error": "Error on read body"})
+		return
+	}
+	defer ctx.Req.Body().ReadCloser()
+
+	momeTask := model.MoveTaskRequest{}
+	err = json.Unmarshal(body, &momeTask)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, map[string]string{"error": "Json bad formated"})
+		return
+	}
+
+	err = repo.MoveTaskBoard(projectID, momeTask.FromBoard, momeTask.ToBoard, momeTask.TaskID)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, map[string]string{"error": "error on move task. ERROR: " + err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, map[string]string{})
+}

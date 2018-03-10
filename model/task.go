@@ -21,3 +21,9 @@ type Task struct {
 	CreatedAt       time.Time     `json:"created_at" bson:"created_at"`
 	UpdatedAt       time.Time     `json:"updated_at" bson:"updated_at"`
 }
+
+type MoveTaskRequest struct {
+	FromBoard string `json:"from_board"`
+	ToBoard   string `json:"to_board"`
+	TaskID    string `json:"task_id"`
+}

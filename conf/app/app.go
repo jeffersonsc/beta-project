@@ -75,7 +75,9 @@ func SetupRoutes(app *macaron.Macaron) {
 		app.Put("/:id", handler.UpdateProjectHandler)
 
 		app.Post("/:projectid/tasks", handler.CreateTaskHandler)
+		app.Post("/:projectid/movetask", handler.MoveTaskhandler)
 		app.Put("/:projectid/tasks/:id", handler.UpdateTaskHandler)
+
 	})
 
 	/*
